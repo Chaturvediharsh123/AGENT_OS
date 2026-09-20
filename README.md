@@ -2,7 +2,23 @@
 
 ### A local-first command center for running AI agents together
 
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Ollama](https://img.shields.io/badge/Local%20models-Ollama-111827)](https://ollama.com/)
+[![Runtime](https://img.shields.io/badge/Runtime-local--first-27c499)](http://localhost:8080)
+[![Status](https://img.shields.io/badge/Status-hackathon--ready-f08a6f)](https://github.com/Chaturvediharsh123/AGENT_OS)
+
+> **One outcome. The right crew. A visible result.**
+
 AgentOS is a visual workspace for turning one outcome into a coordinated run of AI agents. Choose one agent, a subset, or the full crew; route work to Ollama or a cloud model; watch the run unfold; then inspect the finished answer as a searchable, exportable result.
+
+### Explore the workspace
+
+| | Link |
+| --- | --- |
+| Run it locally | [Quick start](#quick-start) |
+| Learn the workflow | [Interactive guide](http://localhost:8080/guide) |
+| Understand the design | [Architecture blueprint](ARCHITECTURE.md) |
+| Browse the source | [GitHub repository](https://github.com/Chaturvediharsh123/AGENT_OS) |
 
 > **Status:** hackathon-ready local prototype. The UI, workflow controls, run history, guide, metrics, approval preview, replay, comparison, export, and MCP permission surfaces are implemented. Production auth, encrypted credential storage, durable multi-tenant storage, and real external MCP adapters remain the next hardening phase.
 
@@ -18,6 +34,18 @@ AgentOS is a visual workspace for turning one outcome into a coordinated run of 
 - **Export results** as Markdown or print-ready PDF.
 - **MCP permission scopes** for Slack, Gmail, GitHub, Notion, and Cal.com workflows.
 - **Animated command-center UI** plus a dedicated interactive guide at `/guide`.
+
+## Feature matrix
+
+| Workspace surface | What it gives you |
+| --- | --- |
+| Mission control | Describe an outcome and dispatch it to one or more agents |
+| Agent roster | See each agent's role, provider, model, and readiness |
+| Live activity | Follow progress, timing, status, and run health as work happens |
+| Workspace memory | Search and reopen previous mission outputs |
+| Safety center | Review MCP scopes and approve side-effecting actions |
+| Replay lab | Replay a mission and compare runs side by side |
+| Export station | Download Markdown or print a clean PDF copy of a result |
 
 ## Quick start
 
@@ -105,6 +133,17 @@ POST /api/run
 
 The SQLite runtime file (`agentos.db`) is intentionally ignored and is created automatically on first start.
 
+## Screenshots and demo flow
+
+AgentOS is designed to be understood in under a minute:
+
+1. Open the mission console.
+2. Select **Scout** for a single-agent run, or add more cooks for parallel work.
+3. Dispatch and watch the activity timeline.
+4. Open the completed result, then export or replay it.
+
+The `/guide` page walks through this flow with the same unified theme as the workspace.
+
 ## Production roadmap
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for planned service boundaries, tenancy, provider gateway, memory fabric, typed tool gateway, approvals, replay, and security hardening.
@@ -115,6 +154,14 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for planned service boundaries, tenancy, 
 2. Keep secrets, databases, logs, and generated output out of commits.
 3. Test the local server and core API endpoints before opening a PR.
 4. Update the guide or architecture notes when behavior changes.
+
+### Suggested GitHub labels
+
+Use these labels to keep hackathon issues easy to triage:
+
+`bug` · `enhancement` · `good first issue` · `documentation` · `ui/ux` · `ollama` · `cloud-provider` · `mcp` · `security` · `performance` · `help wanted`
+
+Recommended colors: coral for product work, mint for ready/help-wanted work, amber for bugs, and violet for integrations.
 
 ## License
 
