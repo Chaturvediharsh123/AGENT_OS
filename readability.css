@@ -1,0 +1,12 @@
+/* Readability pass: comfortable type without changing the visual language. */
+/* Keep the original scale; only lift the smallest supporting text. */
+.kicker,.rail-head,.order-label,.mode label,.ticket,.right-status,.context-count{font-size:10px!important;line-height:1.35!important;letter-spacing:1px!important}
+.location,.top-search input,.top-search kbd{font-size:11px!important}.top-btn{font-size:10px!important}.profile{font-size:12px!important}
+.queue-card b{font-size:11px!important}.queue-card small,.queue-card time{font-size:9px!important;line-height:1.35!important}
+.side-widget h4,.right-widget h4,.side-section-title{font-size:10px!important}.side-widget p{font-size:10px!important}.side-metric,.side-action span{font-size:9px!important}.side-agent b{font-size:11px!important}.side-agent small,.side-agent em{font-size:9px!important}.activity-row{font-size:10px!important}.activity-row em{font-size:9px!important}
+.sub{font-size:12px!important;line-height:1.45!important}.line-title h2{font-size:20px!important}.line-title>span{font-size:10px!important}
+.order-console textarea{font-size:14px!important;line-height:1.45!important}.mode select{font-size:10px!important;padding:8px 10px!important}.cook-btn{font-size:12px!important;padding:11px 15px!important}
+.stall-awning b{font-size:12px!important}.stall-awning i{font-size:8px!important}.station-open h4{font-size:16px!important}.station .role{font-size:10px!important}.station .pick{font-size:10px!important;padding:5px 7px!important}.model-pill{font-size:10px!important;padding:4px 7px!important}.station footer{font-size:9px!important}
+.context-head h2{font-size:19px!important}.shelf-empty b{font-size:14px!important}.shelf-empty small{font-size:10px!important;line-height:1.45!important}.context-tip{font-size:10px!important}.context-tip b{font-size:9px!important}.context-tip p{font-size:10px!important}
+.run h4{font-size:11px!important}.run p,.run time{font-size:9px!important;line-height:1.35!important}
+@media(max-width:720px){.floor h1{font-size:32px!important}.line-title h2{font-size:20px!important}.order-console textarea{font-size:14px!important}}

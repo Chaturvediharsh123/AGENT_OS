@@ -1,0 +1,11 @@
+/* One shared AgentOS theme: Midnight Mint, used by workspace and guide. */
+:root{--unified-bg:#0b1218;--unified-panel:#12232b;--unified-panel-hi:#19343c;--unified-line:#31515a;--unified-text:#edf5f5;--unified-muted:#9ab0b4;--unified-mint:#71d4c8;--unified-orange:#ef9272}
+body{background:var(--unified-bg)!important;color:var(--unified-text)!important}
+.top{background:#0e181f!important;border-bottom:1px solid var(--unified-line)!important}
+.brand b{border-radius:50%!important;background:#12434b!important;color:var(--unified-mint)!important;border:1px solid #2c6970!important}
+.top-btn,.profile{height:38px!important;border:1px solid var(--unified-line)!important;border-radius:999px!important;background:#12232b!important;color:#dcebea!important;box-shadow:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;white-space:nowrap!important}
+.top-btn{padding:0 15px!important}.top-btn:hover{background:#1a343c!important;border-color:#6d9297!important}.top-btn.primary{background:var(--unified-orange)!important;border-color:var(--unified-orange)!important;color:#241716!important}.profile{width:38px!important;padding:0!important;border-radius:50%!important;background:#1b3e45!important;color:#d7f1ee!important}
+.theme-picker{display:none!important}
+.left-rail,.right-rail{background:#0e1a21!important;border-color:var(--unified-line)!important}.floor{background:radial-gradient(circle at 50% 12%,#132a31 0,#0d171e 48%,#0b1218 100%)!important}.order-console,.station,.context-results,.live-timeline,.side-widget,.station-directory,.right-widget,.activity-panel{border-color:var(--unified-line)!important}
+.nav{background:#0e181f!important;border-color:var(--unified-line)!important}.nav a{border-radius:999px!important}.nav .brand b{display:inline-grid!important;place-items:center!important;border-radius:50%!important}
+.hero h1 span,.eyebrow,.feature-title,.section-head .eyebrow{color:var(--unified-mint)!important}.cta{background:var(--unified-orange)!important}.step,.feature,.callout{background:linear-gradient(145deg,#19343c,#12232b)!important;border-color:var(--unified-line)!important}

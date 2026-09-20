@@ -1,0 +1,43 @@
+/* Clarity pass: fewer competing borders, stronger hierarchy, readable agent metadata. */
+:root{--clear-bg:#0b1218;--clear-panel:#13232b;--clear-panel-hi:#1c333c;--clear-line:#31515a;--clear-text:#eef5f5;--clear-muted:#91a7ac;--clear-accent:#f39a73}
+body{letter-spacing:.01em}
+.app{grid-template-columns:258px minmax(620px,1fr) 332px!important}
+.top{padding-inline:28px!important}
+.left-rail,.right-rail{background:linear-gradient(180deg,#101c23,#0d171e)!important}
+.left-rail{padding:22px 16px!important}
+.right-rail{padding:24px 18px!important}
+.rail-head{font-size:10px!important;color:#9ab0b4!important}
+.queue-card{min-height:58px!important;padding:10px 11px!important}
+.queue-card b{font-size:11px!important;color:#e8f1f1!important}
+.queue-card small{font-size:9px!important;line-height:1.35!important}
+.side-widget,.station-directory,.right-widget,.activity-panel{background:linear-gradient(145deg,#142a33,#102129)!important;border-color:#31515a!important;box-shadow:0 10px 22px #0003!important}
+.side-section-title,.side-widget h4,.right-widget h4{font-size:10px!important;letter-spacing:1.4px!important}
+.side-agent{padding:9px 0!important}
+.side-agent b{font-size:11px!important;color:#f0f6f6!important}.side-agent small{font-size:9px!important}.side-agent em{font-size:9px!important}
+.floor{padding:36px 48px 72px!important;background:radial-gradient(circle at 50% 18%,#13242b 0,#0e171e 46%,#0b1218 100%)!important}
+.floor-head{max-width:980px!important;margin-inline:auto!important}
+.floor h1{font-size:44px!important;line-height:.98!important;letter-spacing:-1.4px!important}
+.sub{max-width:650px!important;font-size:12px!important;color:#9aadb1!important}
+.order-console{max-width:980px!important;margin-inline:auto!important;background:linear-gradient(145deg,#172a32,#122129)!important;border-color:#365761!important}
+.order-console textarea{font-size:15px!important;line-height:1.5!important;color:#f0f5f5!important}
+.line-title{max-width:980px!important;margin-inline:auto!important}
+.line-title h2{font-size:24px!important;letter-spacing:-.5px!important}
+.line-title .kicker{font-size:10px!important}
+.stations{max-width:980px!important;margin-inline:auto!important;gap:18px!important;padding:14px!important;border-radius:18px!important;background:linear-gradient(145deg,#12333a,#0f262d)!important;border:1px solid #24545b!important}
+.station{min-height:205px!important;background:#142730!important;border-color:#355963!important;box-shadow:0 12px 22px #0004!important}
+.station:hover{background:#19303a!important;border-color:#78919a!important}
+.station.picked{border-color:var(--clear-accent)!important;box-shadow:0 0 0 2px #f39a7338,0 14px 26px #0005!important}
+.stall-awning{height:48px!important;background:linear-gradient(180deg,#203640,#1b2d35)!important;border-bottom:1px solid #3c626a!important}
+.stall-awning b{font-size:13px!important;color:#f1f6f6!important}.stall-awning i{font-size:8px!important;color:#9ab0b4!important}
+.station-open{padding:17px 16px!important}.station-open h4{font-size:17px!important;color:#f2f7f7!important;margin-top:4px!important}.station .role{font-size:10px!important;color:#a5b8bb!important}
+.station .pick{font-size:10px!important;background:#102027!important;border-color:#54747b!important;color:#d9e6e6!important}
+.model-pill{font-size:10px!important;background:#0e1a21!important;color:#c4d3d5!important;border-color:#3d5961!important}
+.station footer{font-size:9px!important;color:#9ab0b4!important}
+.right-rail .context-head h2{font-size:21px!important}.right-rail .context-head .kicker{font-size:10px!important}
+.context-results{border-color:#31515a!important;background:#102027!important;border-radius:14px!important;padding:12px!important}
+.shelf-empty{min-height:240px!important;border-color:#527079!important;color:#b4c6c8!important;background:linear-gradient(145deg,#142a32,#102129)!important}
+.shelf-empty b{font-size:15px!important;color:#e3eeee!important}.shelf-empty small{max-width:205px!important;line-height:1.55!important;color:#9db2b5!important}
+.activity-panel{margin-top:14px!important}.activity-row{font-size:10px!important;padding:10px 0!important}
+.service{max-width:980px!important;margin-inline:auto!important}
+@media(max-width:1250px){.app{grid-template-columns:230px minmax(0,1fr) 290px!important}.floor{padding-inline:28px!important}}
+@media(max-width:900px){.app{grid-template-columns:210px minmax(0,1fr)!important}.floor{padding-inline:22px!important}.right-rail{display:none!important}}
