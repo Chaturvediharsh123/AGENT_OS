@@ -16,7 +16,8 @@ AgentOS is a visual workspace for turning one outcome into a coordinated run of 
 | | Link |
 | --- | --- |
 | Run it locally | [Quick start](#quick-start) |
-| Learn the workflow | [Interactive guide](http://localhost:8080/guide) |
+| Open the workspace | [Mission Control](http://localhost:8080/app) |
+| Learn the workflow | [Guide & API](http://localhost:8080/app#/guide) |
 | Understand the design | [Architecture blueprint](ARCHITECTURE.md) |
 | Browse the source | [GitHub repository](https://github.com/Chaturvediharsh123/AGENT_OS) |
 
@@ -25,6 +26,8 @@ AgentOS is a visual workspace for turning one outcome into a coordinated run of 
 ## Why AgentOS
 
 - **Run one or many agents** from the same mission console.
+- **Crew handoff mode** — agents run in order and each one builds on the previous agents' work (research → analysis → draft → review), instead of answering in isolation.
+- **Live mission pipeline** showing each agent step, its status, timing, and handoff — click a step to open its output.
 - **Local-first by default** with Ollama and clear runtime health.
 - **Provider-aware routing** for Ollama, OpenAI, Anthropic, and Gemini surfaces.
 - **Live observability** with activity timeline, run history, latency, success, and cost indicators.
@@ -33,7 +36,9 @@ AgentOS is a visual workspace for turning one outcome into a coordinated run of 
 - **Replay and compare** previous runs to make iteration measurable.
 - **Export results** as Markdown or print-ready PDF.
 - **MCP permission scopes** for Slack, Gmail, GitHub, Notion, and Cal.com workflows.
-- **Animated command-center UI** plus a dedicated interactive guide at `/guide`.
+- **Demo provider** — clearly labelled simulated output so you can present the full flow with no Ollama or API key.
+- **Command palette** (`Ctrl/Cmd + K`) for search and navigation, light/dark themes, and a mobile layout.
+- **Landing page** at `/`, workspace at `/app`, with Mission Control, Missions, Agents, Models & Keys, Integrations and Guide pages.
 
 ## Feature matrix
 
@@ -57,12 +62,27 @@ AgentOS is a visual workspace for turning one outcome into a coordinated run of 
 
 ### Run locally
 
-```powershell
-cd outputs/agentos
+```bash
+git clone https://github.com/Chaturvediharsh123/AGENT_OS
+cd AGENT_OS
 python server.py
 ```
 
-Open [http://localhost:8080](http://localhost:8080). Read the walkthrough at [http://localhost:8080/guide](http://localhost:8080/guide).
+No `pip install` needed — AgentOS uses only the Python standard library.
+
+### Configuration
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `AGENTOS_HOST` | `127.0.0.1` | Bind address |
+| `AGENTOS_PORT` | `8080` | Port |
+| `AGENTOS_DB` | `./agentos.db` | SQLite database path |
+| `OLLAMA_URL` | `http://127.0.0.1:11434` | Ollama endpoint |
+| `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` / `GOOGLE_API_KEY` | — | Cloud providers (optional) |
+
+Open [http://localhost:8080](http://localhost:8080) for the landing page, or go straight to the workspace at [http://localhost:8080/app](http://localhost:8080/app). The guide lives at [/app#/guide](http://localhost:8080/app#/guide).
+
+**No Ollama on stage?** Open **Models & Keys → Demo mode** (or click *Use demo mode* on the offline banner). Agents switch to the `demo` provider, which returns clearly labelled simulated output so the pipeline, handoff, compare and export flows all still work.
 
 ### Connect Ollama
 
@@ -92,7 +112,7 @@ Open the model/provider controls, select a provider, and enter its API key when 
 
 1. Write the outcome in the mission console.
 2. Select one agent, selected agents, or the full crew.
-3. Choose a model strategy such as Balanced.
+3. Choose a strategy: **Balanced** (agents work in parallel), **Crew handoff** (agents work in sequence, each seeing earlier output), or **Local only** (refuses to send anything to a cloud provider).
 4. Dispatch the mission.
 5. Follow progress in **Live Activity**.
 6. Open the completed dish to inspect the response, source order, model, timing, and status.
@@ -108,13 +128,15 @@ MCP connectors are shown with explicit permission scopes. External side effects 
 
 ```text
 agentos/
-├── server.py            # Local HTTP API and static-file server
-├── app.js               # Workspace interactions and mission runtime UI
-├── new-index.html       # Main command-center shell
-├── guide.html           # Animated product guide
-├── *.css                # Layered visual theme and responsive layout
-├── feature-pack.js      # Activity, metrics, approvals, exports, replay
-├── assets/              # UI artwork
+├── server.py            # Local HTTP API, agent runtime, static server
+├── index.html           # Landing page (/)
+├── app.html             # Workspace shell (/app, /guide)
+├── static/
+│   ├── agentos.css      # Design system: tokens, light/dark themes, landing + app
+│   └── app.js           # Hash-routed SPA: mission control, missions, agents,
+│                        #   models, integrations, guide, command palette
+├── tests/               # API tests (python -m unittest discover tests)
+├── assets/              # Artwork
 ├── ARCHITECTURE.md      # Production architecture and security blueprint
 └── .gitignore           # Keeps runtime data and secrets out of Git
 ```
@@ -124,11 +146,26 @@ agentos/
 The local server exposes lightweight endpoints used by the UI:
 
 ```text
-GET /api/agents
-GET /api/runs
-GET /api/models
-GET /api/mcp/servers
-POST /api/run
+GET    /api/health              server + Ollama status
+GET    /api/stats               mission / run totals, success rate, avg latency
+GET    /api/agents
+POST   /api/agents              create an agent
+PATCH  /api/agents/{id}
+DELETE /api/agents/{id}
+GET    /api/runs?limit=         latest runs (default 60, max 500)
+GET    /api/runs/{id}
+GET    /api/missions/{id}       every run in one mission, in order
+DELETE /api/missions/{id}       delete a finished mission
+POST   /api/runs                {"task", "agent_ids", "routing"}
+GET    /api/search?q=
+GET    /api/models
+GET    /api/mcp/servers
+```
+
+Run the test suite (also runs in GitHub Actions on every push):
+
+```bash
+python -m unittest discover -v tests
 ```
 
 The SQLite runtime file (`agentos.db`) is intentionally ignored and is created automatically on first start.
@@ -152,7 +189,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for planned service boundaries, tenancy, 
 
 1. Create a feature branch from `main`.
 2. Keep secrets, databases, logs, and generated output out of commits.
-3. Test the local server and core API endpoints before opening a PR.
+3. Run `python -m unittest discover tests` before opening a PR.
 4. Update the guide or architecture notes when behavior changes.
 
 ### Suggested GitHub labels

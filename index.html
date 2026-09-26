@@ -1,9 +1,191 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MasalaOS — AI Kitchen</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css"></head><body>
-<div class="app"><header class="top"><a class="brand" href="/"><b>☕</b><span>MASALA</span><em>OS</em></a><div class="location"><i></i> BENGALURU / INDIAN AI KITCHEN</div><div class="top-search"><span>⌕</span><input id="searchContext" placeholder="Search context, orders, answers"><kbd>⌘ K</kbd></div><button class="top-btn" data-action="models">Models <i id="ollamaState"></i></button><button class="top-btn primary" data-action="new-order">+ New order</button><button class="profile">AR</button></header>
-<aside class="left-rail"><div class="rail-head"><span>TABLES / CUSTOMERS</span><button data-action="refresh">↻</button></div><div id="queue" class="queue"></div><div class="rail-footer"><div class="shift"><span>DINNER SHIFT</span><b>04 cooks online</b><i><u></u></i></div><button data-action="ledger">◷ <span>Service log</span></button><button data-action="privacy">◉ <span>Privacy / local mode</span></button></div></aside>
-<main class="floor"><div class="floor-head"><div><p class="kicker">LIVE KITCHEN FLOOR <span>● SERVICE OPEN</span></p><h1>Cook something <i>brilliant.</i></h1><p class="sub">Your customers bring the questions. Your cooks turn them into answers.</p></div><div class="clock"><strong id="liveClock">19:42</strong><small>IST · TABLE 07</small></div></div>
-<section class="order-console"><div class="order-label"><span class="ticket">TICKET #<b id="ticketNo">007</b></span><span id="taskState" class="ready">READY FOR ORDER</span></div><textarea id="task" placeholder="What does the customer need? Try: Research GANs in neural networks and create a beginner-friendly briefing."></textarea><div class="console-foot"><div class="mode"><label>DISPATCH</label><select id="runMode"><option value="selected">Selected cooks</option><option value="all">Whole kitchen</option></select><select id="routing"><option>Balanced</option><option>Fastest</option><option>Local only</option></select></div><button class="cook-btn" data-action="run">Start service <span>↗</span></button></div></section>
-<div class="line-title"><div><p class="kicker">THE HOT LINE</p><h2>Choose your cooks</h2></div><span id="selectedLabel">1 selected</span></div><section id="stations" class="stations"></section>
-<section class="service"><div class="line-title"><div><p class="kicker">SERVICE LOG</p><h2>Orders in motion</h2></div><button class="link-btn" data-action="ledger">Open full log ↗</button></div><div id="runs" class="run-list"></div></section></main>
-<aside class="right-rail"><div class="context-head"><div><p class="kicker">CONTEXT SHELF</p><h2>What the kitchen knows</h2></div><span id="contextCount">0 hits</span></div><div id="contextResults" class="context-results"><div class="shelf-empty"><span>◌</span><b>Searchable memory</b><small>Search past customer orders and cooked answers. Results appear here.</small></div></div><div class="context-tip"><b>TIP</b><p>Use <kbd>⌘ K</kbd> to jump to context search from anywhere.</p></div><div class="right-status"><span><i class="green"></i> Ollama local</span><span><i></i> Cloud keys optional</span></div></aside>
-</div><div id="modal" class="modal" aria-hidden="true"><div id="modalCard" class="modal-card"></div></div><div id="toast" class="toast"></div><script src="/app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgentOS — Orchestrate AI agents, locally</title>
+<meta name="description" content="AgentOS turns one outcome into a coordinated crew of AI agents. Local-first with Ollama, cloud-ready, fully observable.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%238b6cff'/%3E%3Cstop offset='1' stop-color='%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M16 7l8 4.5v9L16 25l-8-4.5v-9z' fill='none' stroke='white' stroke-width='2.2' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='16' r='2.6' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/agentos.css">
+<script>try{const t=localStorage.getItem('agentos-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body class="landing">
+<div class="bg-grid"></div><div class="bg-glow"></div>
+
+<header class="l-nav">
+  <a class="logo" href="/"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><circle cx="12" cy="12" r="2.2" fill="#fff" stroke="none"/></svg></span><b>AgentOS</b></a>
+  <nav>
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#stack">Under the hood</a>
+    <a href="/app#/guide">Docs</a>
+  </nav>
+  <a class="btn ghost sm" href="https://github.com/Chaturvediharsh123/AGENT_OS" target="_blank" rel="noopener">GitHub</a>
+  <a class="btn primary sm" href="/app">Open workspace →</a>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="pill"><span class="dot live"></span> <span id="liveStatus">Local runtime · checking…</span></span>
+    <h1>One outcome.<br><span class="grad-text">A crew of AI agents.</span></h1>
+    <p class="lead">AgentOS turns a single mission into a coordinated run of specialist agents — research, analysis, writing and review — that hand work to each other while you watch every step.</p>
+    <div class="cta-row">
+      <a class="btn primary lg" href="/app">Launch mission control →</a>
+      <a class="btn lg" href="#how">See how it works</a>
+    </div>
+    <div class="trust">
+      <span>✓ Zero dependencies</span><span>✓ Runs on Ollama, offline</span><span>✓ OpenAI · Anthropic · Gemini ready</span><span>✓ Human approval gates</span>
+    </div>
+
+    <div class="preview">
+      <div class="preview-inner">
+        <div class="preview-bar"><i></i><i></i><i></i><span>localhost:8080/app — Mission Control</span></div>
+        <div class="preview-body">
+          <div class="demo-task">
+            <span class="pill accent">MISSION</span>
+            <span class="typed" id="typed"></span>
+            <span class="btn primary sm">Dispatch ↗</span>
+          </div>
+          <div class="flow" id="flow">
+            <div class="flow-node"><div class="av g0">S</div><b>Scout</b><small>Researcher</small><div class="st">● QUEUED</div></div>
+            <div class="flow-link"></div>
+            <div class="flow-node"><div class="av g1">M</div><b>Miller</b><small>Analyst</small><div class="st">● QUEUED</div></div>
+            <div class="flow-link"></div>
+            <div class="flow-node"><div class="av g2">J</div><b>Juniper</b><small>Writer</small><div class="st">● QUEUED</div></div>
+            <div class="flow-link"></div>
+            <div class="flow-node"><div class="av g3">C</div><b>Clover</b><small>Reviewer</small><div class="st">● QUEUED</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section-head reveal">
+      <div class="eyebrow">Features</div>
+      <h2>Everything you need to <span class="grad-text">run agents as a team</span></h2>
+      <p>Not another chat box. A command center for dispatching, observing and shipping multi-agent work.</p>
+    </div>
+    <div class="bento">
+      <article class="card c-4 reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.3 11l9.4-4M7.3 13l9.4 4"/></svg></div>
+        <h3>Crew handoff orchestration</h3>
+        <p>Agents run in sequence and each one builds on everything the crew produced before it. Research becomes analysis becomes a draft becomes a reviewed result — not four disconnected answers.</p>
+        <div class="mini-code"><span class="c"># POST /api/runs</span>
+{ <span class="k">"task"</span>: <span class="s">"Draft a launch brief"</span>, <span class="k">"routing"</span>: <span class="s">"Crew handoff"</span>, <span class="k">"agent_ids"</span>: [1,2,3,4] }</div>
+      </article>
+      <article class="card c-2 reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9z"/></svg></div>
+        <h3>Local-first</h3>
+        <p>Ollama by default. “Local only” routing refuses to send a byte to the cloud.</p>
+      </article>
+      <article class="card c-2 reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+        <h3>Live pipeline</h3>
+        <p>Watch every step move from queued to running to done, with timing and errors inline.</p>
+      </article>
+      <article class="card c-2 reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Approval gates</h3>
+        <p>MCP connectors get scoped permissions. Anything with side effects waits for you.</p>
+      </article>
+      <article class="card c-2 reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></div>
+        <h3>Workspace memory</h3>
+        <p>Every mission is searchable. Hit <kbd>Ctrl K</kbd> and jump to any past answer.</p>
+      </article>
+      <article class="card c-3 reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h10M4 17h7"/><path d="M17 14l3 3-3 3"/></svg></div>
+        <h3>Replay, compare, export</h3>
+        <p>Re-run any mission in one click, view agent outputs side-by-side, and export the result as Markdown or a print-ready PDF.</p>
+      </article>
+      <article class="card c-3 reveal">
+        <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg></div>
+        <h3>Bring any model</h3>
+        <p>Mix Ollama, OpenAI, Anthropic and Gemini agents in one crew. No Ollama? Flip on the labelled demo provider and present anyway.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="section-head reveal">
+      <div class="eyebrow">How it works</div>
+      <h2>From blank prompt to<br>reviewed result in three moves</h2>
+    </div>
+    <div class="steps">
+      <article class="card step reveal"><div class="step-num">1</div><h3>Describe the outcome</h3><p>Write what “done” looks like, or start from a template: launch brief, market scan, code review, study plan.</p></article>
+      <article class="card step reveal"><div class="step-num">2</div><h3>Assemble your crew</h3><p>Pick one agent or the whole team, then choose a strategy: parallel, crew handoff, or local only.</p></article>
+      <article class="card step reveal"><div class="step-num">3</div><h3>Watch, review, ship</h3><p>Follow the live pipeline, open each step, compare outputs, then export or replay the mission.</p></article>
+    </div>
+  </section>
+
+  <section class="section" id="stack">
+    <div class="section-head reveal">
+      <div class="eyebrow">Under the hood</div>
+      <h2>Tiny footprint. <span class="grad-text">Serious architecture.</span></h2>
+      <p>One Python file, the standard library, SQLite — and a provider-neutral runtime that is ready to grow.</p>
+    </div>
+    <div class="stats-band">
+      <div class="card reveal"><b class="grad-text">0</b><span>pip dependencies</span></div>
+      <div class="card reveal"><b class="grad-text">5</b><span>model providers</span></div>
+      <div class="card reveal"><b class="grad-text" id="statMissions">—</b><span>missions run on this machine</span></div>
+      <div class="card reveal"><b class="grad-text">1</b><span>command to start</span></div>
+    </div>
+  </section>
+
+  <section class="cta-band reveal">
+    <h2>Your crew is waiting.</h2>
+    <p>Start the server, open the workspace, dispatch your first mission.</p>
+    <div class="cta-row" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn primary lg" href="/app">Open workspace →</a>
+      <a class="btn lg" href="/app#/guide">Read the guide</a>
+    </div>
+  </section>
+
+  <footer class="l-foot">
+    <span>© AgentOS · Built by <b>Harsh</b> with a local-first mindset.</span>
+    <span><a href="/app">Workspace</a><a href="/app#/guide">Guide</a><a href="https://github.com/Chaturvediharsh123/AGENT_OS" target="_blank" rel="noopener">GitHub</a></span>
+  </footer>
+</main>
+
+<script>
+(() => {
+  const missions = ['Research the AI tutoring market and draft a one-page decision brief',
+    'Plan a 48-hour hackathon launch for our product',
+    'Review our onboarding flow and propose three fixes'];
+  const typed = document.getElementById('typed');
+  const nodes = [...document.querySelectorAll('.flow-node')];
+  const links = [...document.querySelectorAll('.flow-link')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const set = (n, cls, label) => { n.className = 'flow-node ' + cls; n.querySelector('.st').textContent = label; };
+  async function loop(i = 0) {
+    const text = missions[i % missions.length];
+    nodes.forEach(n => set(n, '', '● QUEUED')); links.forEach(l => l.classList.remove('on'));
+    typed.textContent = '';
+    for (const ch of text) { typed.textContent += ch; await wait(reduce ? 0 : 28); }
+    await wait(500);
+    for (let k = 0; k < nodes.length; k++) {
+      set(nodes[k], 'running', '◐ RUNNING');
+      await wait(1300);
+      set(nodes[k], 'done', '✓ DONE');
+      if (links[k]) links[k].classList.add('on');
+    }
+    await wait(2200);
+    loop(i + 1);
+  }
+  loop();
+
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  fetch('/api/health').then(r => r.json()).then(h => {
+    document.getElementById('liveStatus').textContent = h.ollama ? `Ollama online · ${h.models} model${h.models === 1 ? '' : 's'} ready` : `AgentOS ${h.version} running · Ollama offline`;
+  }).catch(() => { document.getElementById('liveStatus').textContent = 'Local-first agent runtime'; });
+  fetch('/api/stats').then(r => r.json()).then(s => { document.getElementById('statMissions').textContent = s.missions; }).catch(() => {});
+})();
+</script>
+</body>
+</html>
