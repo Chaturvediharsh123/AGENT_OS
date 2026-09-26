@@ -1,0 +1,4 @@
+Stop asking one AI. AgentOS hands your outcome to a crew (researcher, analyst, writer, reviewer), and you watch every handoff live, then compare, export and search the results.
+
+Local-first on Ollama, zero pip dependencies, one command: python server.py
+github.com/Chaturvediharsh123/AGENT_OS

@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../static/agentos.css">
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+  .grid { position: absolute; inset: -80px; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 20%, transparent 78%); }
+  .glow { position: absolute; width: 1500px; height: 1000px; left: 50%; top: 50%; background: radial-gradient(closest-side, rgba(139,108,255,.30), rgba(34,211,238,.10), transparent); }
+  .glow2 { position: absolute; width: 900px; height: 900px; left: 50%; top: 50%; background: radial-gradient(closest-side, rgba(244,114,182,.12), transparent); }
+  .layer { position: absolute; inset: 0; opacity: 0; }
+  .center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+  /* hook */
+  .hline { position: relative; font: 700 84px/1.18 Inter; letter-spacing: -.04em; color: var(--text-2); }
+  .hline .strike { position: absolute; left: -12px; right: -12px; top: 54%; height: 7px; border-radius: 4px; background: var(--grad); transform-origin: left; }
+  .big { font: 900 158px/1.0 Inter; letter-spacing: -.055em; text-align: center; color: var(--text); }
+  .big .w { display: inline-block; margin: 0 .1em; }
+
+  /* reveal */
+  .rlogo { position: absolute; width: 170px; height: 170px; border-radius: 48px; background: var(--grad); display: grid; place-items: center; box-shadow: 0 30px 100px -20px rgba(99,102,241,.95); }
+  .rlogo svg { width: 96px; height: 96px; }
+  .ravatar { position: absolute; width: 96px; height: 96px; border-radius: 26px; display: grid; place-items: center; font: 800 40px Inter; color: #fff; box-shadow: 0 20px 50px -18px rgba(0,0,0,.8); }
+  .ravatar small { position: absolute; top: 108px; font: 600 20px Inter; color: var(--text-2); white-space: nowrap; }
+  #rlines path { stroke: url(#lg); stroke-width: 3; fill: none; stroke-dasharray: 10 10; }
+  .rtext { position: absolute; left: 0; right: 0; top: 660px; text-align: center; font: 800 112px/1.05 Inter; letter-spacing: -.05em; }
+
+  /* browser */
+  #browser { position: absolute; left: 160px; top: 222px; width: 1600px; height: 1044px; transform-origin: 50% 0; border-radius: 18px; overflow: hidden; border: 1px solid var(--border-2); background: var(--bg-2); box-shadow: 0 60px 140px -30px rgba(0,0,0,.9), 0 0 0 1px rgba(139,108,255,.15); }
+  .bbar { height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: var(--bg-2); border-bottom: 1px solid var(--border); }
+  .bbar i { width: 12px; height: 12px; border-radius: 50%; }
+  .bbar i:nth-child(1) { background: #ff5f57; } .bbar i:nth-child(2) { background: #febc2e; } .bbar i:nth-child(3) { background: #28c840; }
+  .url { margin: 0 auto; transform: translateX(-30px); min-width: 520px; height: 28px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 8px; font: 500 13px 'JetBrains Mono'; color: var(--text-2); }
+  .url b { color: var(--muted); font-weight: 500; }
+  .viewport { position: relative; width: 1600px; height: 1000px; overflow: hidden; background: var(--bg); }
+  #cam { position: absolute; left: 0; top: 0; width: 1600px; height: 1000px; transform-origin: 0 0; }
+  .shot { position: absolute; left: 0; top: 0; width: 1600px; height: 1000px; overflow: hidden; background: var(--bg); opacity: 0; }
+  .shot .app { min-height: 1000px; height: 1000px; }
+  .shot .sidebar { height: 1000px; position: relative; }
+  .shot .main { height: 1000px; overflow: hidden; }
+  .shot .overlay, .shot .toasts { position: absolute; }
+  .shot .p-node { min-width: 0; }
+  .shot .typed { min-height: 128px; padding: 20px 20px 10px; font-size: 16px; line-height: 1.6; color: var(--text); }
+  .caret { display: inline-block; width: 2px; height: 1.1em; background: var(--accent); vertical-align: -3px; margin-left: 1px; }
+  .cursor { position: absolute; left: 0; top: 0; width: 30px; height: 30px; z-index: 30; filter: drop-shadow(0 4px 8px rgba(0,0,0,.6)); opacity: 0; }
+  .ripple { position: absolute; left: 0; top: 0; width: 64px; height: 64px; border-radius: 50%; border: 3px solid var(--accent-2); z-index: 29; opacity: 0; }
+
+  /* captions */
+  .cap { position: absolute; left: 0; right: 0; top: 46px; text-align: center; opacity: 0; }
+  .cap small { display: block; font: 600 20px 'JetBrains Mono'; letter-spacing: .2em; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; }
+  .cap b { font: 800 66px Inter; letter-spacing: -.04em; color: var(--text); }
+
+  /* keycap */
+  #keys { position: absolute; left: 50%; top: 610px; display: flex; gap: 18px; transform: translateX(-50%); opacity: 0; z-index: 40; }
+  .key { min-width: 120px; height: 120px; padding: 0 28px; border-radius: 22px; display: grid; place-items: center; font: 700 44px 'JetBrains Mono'; color: var(--text); background: linear-gradient(180deg, #252a3b, #171a26); border: 1px solid var(--border-2); border-bottom-width: 7px; box-shadow: 0 30px 60px -20px rgba(0,0,0,.9); }
+  .plus { align-self: center; font: 700 40px Inter; color: var(--muted); }
+
+  /* montage */
+  .tiles { position: absolute; left: 160px; right: 160px; top: 440px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+  .tile { padding: 42px 30px; border-radius: 26px; background: var(--surface); border: 1px solid var(--border-2); text-align: center; opacity: 0; box-shadow: 0 40px 80px -30px rgba(0,0,0,.8); }
+  .tile b { display: block; font: 900 140px/1 Inter; letter-spacing: -.05em; }
+  .tile span { display: block; margin-top: 14px; font: 600 26px Inter; color: var(--text-2); }
+  .mtitle { position: absolute; left: 0; right: 0; top: 220px; text-align: center; font: 800 88px Inter; letter-spacing: -.045em; }
+
+  /* outro */
+  .ologo { width: 150px; height: 150px; border-radius: 42px; background: var(--grad); display: grid; place-items: center; box-shadow: 0 30px 90px -20px rgba(99,102,241,.9); }
+  .ologo svg { width: 84px; height: 84px; }
+  .oname { font: 900 170px Inter; letter-spacing: -.06em; margin-top: 12px; line-height: 1.05; }
+  .otag { font: 700 44px Inter; letter-spacing: -.03em; margin-top: 6px; }
+  .ocmd { margin-top: 44px; padding: 18px 32px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border-2); font: 600 30px 'JetBrains Mono'; }
+  .ocmd .p { color: var(--accent); } .ocmd .a { color: var(--muted); } .ocmd .u { color: var(--accent-2); }
+  .ogh { margin-top: 24px; font: 500 24px 'JetBrains Mono'; color: var(--muted); }
+  .oby { margin-top: 12px; font: 600 22px Inter; color: var(--text-2); }
+  #fade { position: absolute; inset: 0; background: #000; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="grid" id="grid"></div>
+  <div class="glow" id="glow"></div>
+  <div class="glow2" id="glow2"></div>
+
+  <!-- 1 hook -->
+  <div class="layer center" id="L1">
+    <div id="hlines" class="center">
+      <div class="hline">One prompt.<span class="strike"></span></div>
+      <div class="hline">One model.<span class="strike"></span></div>
+      <div class="hline">One answer.<span class="strike"></span></div>
+    </div>
+  </div>
+  <div class="layer center" id="L1b"><div class="big" id="hook"><span class="w">Stop</span><span class="w">asking</span><br><span class="w grad-text">one</span><span class="w">AI.</span></div></div>
+
+  <!-- 2 reveal -->
+  <div class="layer" id="L2">
+    <svg id="rlines" width="1920" height="1080" style="position:absolute;inset:0"><defs><linearGradient id="lg"><stop stop-color="#8b6cff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs></svg>
+    <div class="rlogo" id="rlogo" style="left:875px;top:250px"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><circle cx="12" cy="12" r="2.2" fill="#fff" stroke="none"/></svg></div>
+    <div id="ravs"></div>
+    <div class="rtext"><div id="rt1">One outcome.</div><div id="rt2" class="grad-text">A crew of AI agents.</div></div>
+  </div>
+
+  <!-- app captions -->
+  <div id="caps"></div>
+
+  <!-- browser -->
+  <div id="browser" style="opacity:0">
+    <div class="bbar"><i></i><i></i><i></i><div class="url"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><span id="url">localhost:8080/app</span></div></div>
+    <div class="viewport"><div id="cam">
+      <div id="shots"></div>
+      <div class="ripple" id="ripple"></div>
+      <svg class="cursor" id="cursor" viewBox="0 0 24 24"><path d="M4 2l16 9-7 2-3 7z" fill="#fff" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </div></div>
+  </div>
+  <div id="keys"><div class="key">Ctrl</div><div class="plus">+</div><div class="key">K</div></div>
+
+  <!-- montage -->
+  <div class="layer" id="L10">
+    <div class="mtitle" id="mtitle">Tiny footprint. <span class="grad-text">Serious architecture.</span></div>
+    <div class="tiles">
+      <div class="tile"><b class="grad-text" data-n="0">0</b><span>pip dependencies</span></div>
+      <div class="tile"><b class="grad-text" data-n="4">4</b><span>model providers</span></div>
+      <div class="tile"><b class="grad-text" data-n="3">3</b><span>routing strategies</span></div>
+      <div class="tile"><b class="grad-text" data-n="1">1</b><span>command to start</span></div>
+    </div>
+  </div>
+
+  <!-- outro -->
+  <div class="layer center" id="L11">
+    <div class="ologo" id="ologo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><circle cx="12" cy="12" r="2.2" fill="#fff" stroke="none"/></svg></div>
+    <div class="oname" id="oname">Agent<span class="grad-text">OS</span></div>
+    <div class="otag" id="otag">One outcome. <span class="grad-text">A crew of AI agents.</span></div>
+    <div class="ocmd" id="ocmd"><span class="p">$</span> python server.py <span class="a">→</span> <span class="u">localhost:8080</span></div>
+    <div class="ogh" id="ogh">github.com/Chaturvediharsh123/AGENT_OS</div>
+    <div class="oby" id="oby">Local-first · Built by Harsh</div>
+  </div>
+  <div id="fade"></div>
+</div>
+
+<script src="shots.js"></script>
+<script>
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const lerp = (a, b, p) => a + (b - a) * p;
+const $ = id => document.getElementById(id);
+const win = (t, a, b, i = .35, o = .3) => Math.min(eo(seg(t, a, a + i)), 1 - seg(t, b - o, b));
+const rise = (el, t, a, d = .45, dist = 30) => { el.style.opacity = clamp(seg(t, a, a + d * .7)); el.style.transform = `translateY(${(1 - eo(seg(t, a, a + d))) * dist}px)`; };
+// keyframe track: [[t, ...values]] -> eased interpolation
+function track(keys, t) {
+  if (t <= keys[0][0]) return keys[0].slice(1);
+  for (let i = 1; i < keys.length; i++) {
+    if (t <= keys[i][0]) {
+      const p = eio(seg(t, keys[i - 1][0], keys[i][0]));
+      return keys[i].slice(1).map((v, j) => lerp(keys[i - 1][j + 1], v, p));
+    }
+  }
+  return keys[keys.length - 1].slice(1);
+}
+
+window.boot = function () {
+// ------------------------------------------------------------ build shots
+const SHOT_ORDER = ['agents', 'dash', 'mission', 'compare', 'final', 'palette', 'models'];
+const SH = {};
+for (const k of SHOT_ORDER) {
+  const d = document.createElement('div');
+  d.className = 'shot'; d.innerHTML = SHOTS[k];
+  $('shots').appendChild(d); SH[k] = d;
+}
+const q = (k, s) => SH[k].querySelector(s);
+const qa = (k, s) => [...SH[k].querySelectorAll(s)];
+// composer: swap the textarea for a controllable div
+q('dash', '#dashBanner').innerHTML = '';
+const ta = q('dash', '#task');
+const typed = document.createElement('div'); typed.className = 'typed'; ta.replaceWith(typed);
+q('dash', '#composer').classList.add('focus');
+// dispatch toast + export toast
+q('dash', '#toasts').innerHTML = '<div class="toast ok" id="t1"><span class="dot"></span><span>Mission dispatched to 4 agents</span></div>';
+q('final', '#toasts').innerHTML = `<div class="toast ok" id="t2"><span class="dot"></span><span>Downloaded <b class="mono">agentos-mission-${MAIN_MISSION}.md</b></span></div>`;
+// palette: remember results so they can be revealed
+const palItems = qa('palette', '.palette-list > *');
+const palInput = q('palette', '#paletteInput');
+// recent missions: add a live row at the top
+const recent = q('dash', '#dashRecent .m-list');
+const liveRow = document.createElement('div'); recent.prepend(liveRow);
+
+// measure element boxes in shot coordinates (all transforms are identity here)
+const camRect = () => $('cam').getBoundingClientRect();
+function box(k, sel) {
+  const el = typeof sel === 'string' ? q(k, sel) : sel;
+  const r = el.getBoundingClientRect(), c = camRect();
+  return { x: r.left - c.left, y: r.top - c.top, w: r.width, h: r.height, cx: r.left - c.left + r.width / 2, cy: r.top - c.top + r.height / 2 };
+}
+SH.dash.style.opacity = 1;
+const B = {
+  composer: box('dash', '#composer'),
+  handoff: box('dash', '[data-routing="Crew handoff"]'),
+  parallel: box('dash', '[data-routing="Balanced"]'),
+  dispatch: box('dash', '#dispatchBtn'),
+  pipe: box('dash', '#dashPipe'),
+  pipePanel: box('dash', '#dashPipe').y,
+  exportBtn: box('final', '[data-act="md"]'),
+  finalCard: box('final', '.final'),
+  palette: box('palette', '.palette'),
+  demo: box('models', '[data-act="demo-off"]'),
+};
+const pagePanel = q('dash', '#dashPipe').closest('.panel');
+B.pipeBox = box('dash', pagePanel);
+B.missionPageH = q('mission', '.page').scrollHeight;
+B.comparePageH = q('compare', '.page').scrollHeight;
+B.providers = box('models', '.provider-grid');
+B.agentGrid = box('agents', '.agent-grid');
+B.dashScroll = Math.max(0, B.pipeBox.y + B.pipeBox.h - 930);
+B.modelScroll = Math.max(0, B.providers.y + B.providers.h - 990);
+SH.dash.style.opacity = 0;
+
+// agent rows for pipeline
+const AG = [['Scout', 'Researcher', 1], ['Miller', 'Analyst', 2], ['Juniper', 'Writer', 3], ['Clover', 'Reviewer', 4]];
+const MISSION = 'Research the AI study-planner market, analyse the top 3 competitors, and draft a one-page launch brief.';
+const DISPATCH = 21.5, P0 = 23.3, STEP = 1.4;
+function pipeHTML(t) {
+  let h = '', done = 0;
+  AG.forEach(([n, role, id], i) => {
+    const s = P0 + i * STEP, e = s + STEP;
+    const st = t >= e ? 'completed' : t >= s ? 'running' : 'queued';
+    if (st === 'completed') done++;
+    const dur = st === 'queued' ? '' : ((Math.min(t, e) - s) * 1.6).toFixed(1) + 's';
+    const badge = st === 'completed' ? '✓ Completed' : st === 'running' ? `<span class="spinner" style="transform:rotate(${t * 420}deg)"></span> Running` : '◌ Queued';
+    if (i) h += `<div class="p-link ${t >= s ? 'on' : ''}"><svg viewBox="0 0 34 20"><path d="M2 10h28M24 4l6 6-6 6" style="stroke-dashoffset:${-t * 26}"/></svg></div>`;
+    const bar = st === 'running' ? `<i style="width:100%;background-position:${-t * 180}% 0"></i>` : '<i></i>';
+    h += `<div class="p-node ${st}"><div class="top"><span class="av sm g${id}">${n[0]}</span><div><b>${n}</b><small>${role}</small></div></div><div class="bar">${bar}</div><div class="meta"><span class="status ${st}">${badge}</span><span>${dur}</span></div></div>`;
+  });
+  const status = done === 4 ? '✓ Completed' : '<span class="spinner" style="transform:rotate(' + t * 420 + 'deg)"></span> Running';
+  const cls = done === 4 ? 'completed' : 'running';
+  return { done, html: `<div style="display:block;margin-bottom:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${MISSION}</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"><span class="status ${cls}">${status}</span><span class="pill accent">CREW HANDOFF</span><span class="pill">just now</span></div><div class="pipeline">${h}</div>`, cls, status };
+}
+
+// reveal avatars
+const RAV = [['S', 'Scout', 'g1', 520, 300], ['M', 'Miller', 'g2', 700, 150], ['J', 'Juniper', 'g3', 1124, 150], ['C', 'Clover', 'g4', 1304, 300]];
+$('ravs').innerHTML = RAV.map(([l, n, g, x, y]) => `<div class="ravatar ${g}" style="left:${x}px;top:${y}px">${l}<small>${n}</small></div>`).join('');
+const ravEls = [...document.querySelectorAll('.ravatar')];
+$('rlines').insertAdjacentHTML('beforeend', RAV.map(([, , , x, y]) => `<path d="M${x + 48} ${y + 48} L960 335"/>`).join(''));
+const rlines = [...document.querySelectorAll('#rlines path')];
+
+// captions
+const CAPS = [
+  [10.9, 14.8, 'Your agents', 'Meet the crew.'],
+  [15.2, 22.7, 'Mission control', 'Describe the outcome.'],
+  [23.0, 29.8, 'Crew handoff', 'Watch every handoff, live.'],
+  [30.2, 35.8, 'Mission detail', 'Every step, fully visible.'],
+  [36.2, 38.85, 'Side by side', 'Compare the whole crew.'],
+  [39.15, 41.8, 'Export', 'Ship the final answer.'],
+  [42.2, 46.3, 'Workspace memory', 'Everything, one keystroke away.'],
+  [46.7, 50.3, 'Models & keys', 'Local-first. Cloud-ready.'],
+];
+$('caps').innerHTML = CAPS.map(c => `<div class="cap"><small>${c[2]}</small><b>${c[3]}</b></div>`).join('');
+const capEls = [...document.querySelectorAll('.cap')];
+
+// shot windows + urls
+const SHOTS_T = [
+  ['agents', 10.4, 15.0, '#/agents'], ['dash', 15.0, 30.0, '#/'], ['mission', 30.0, 36.0, '#/mission/' + MAIN_MISSION],
+  ['compare', 36.0, 39.0, '#/mission/' + MAIN_MISSION], ['final', 39.0, 42.0, '#/mission/' + MAIN_MISSION],
+  ['palette', 42.0, 46.5, '#/'], ['models', 46.5, 50.9, '#/models'],
+];
+
+// camera keys [t, fx, fy, zoom]  (focus point in shot coords)
+const C = B.composer, PB = B.pipeBox;
+const CAM = [
+  [10.4, 800, 500, 1], [11.6, 800, 500, 1], [12.8, B.agentGrid.cx - 120, B.agentGrid.y + 170, 1.4], [15.0, B.agentGrid.cx + 120, B.agentGrid.y + 190, 1.42],
+  [15.001, 800, 500, 1], [15.6, 800, 500, 1], [16.6, C.cx, C.cy, 1.55], [19.4, C.cx + 30, C.cy, 1.58], [20.2, C.cx + 60, C.cy + 20, 1.5], [22.2, C.cx + 60, C.cy + 20, 1.5],
+  [23.0, 800, 520, 1.0], [24.1, 800, 520, 1.0], [25.0, PB.cx + 60, PB.cy - B.dashScroll, 1.36], [29.9, PB.cx + 60, PB.cy - B.dashScroll, 1.42],
+  [30.0, 900, 420, 1.22], [35.9, 900, 480, 1.25],
+  [36.0, 850, 520, 1.0], [38.95, 870, 560, 1.12],
+  [39.0, B.finalCard.cx, B.finalCard.cy - 60, 1.08], [39.8, B.finalCard.cx + 60, B.finalCard.cy - 80, 1.18], [41.95, B.finalCard.cx + 60, B.finalCard.cy - 60, 1.14],
+  [42.0, 800, 500, 1], [42.9, 800, 500, 1], [43.6, B.palette.cx, B.palette.cy - 60, 1.6], [46.45, B.palette.cx, B.palette.cy - 50, 1.66],
+  [46.5, 800, 500, 1], [47.4, 800, 500, 1.02], [48.6, 900, B.providers.cy - 170 - B.modelScroll, 1.22], [50.9, 920, B.providers.cy - 150 - B.modelScroll, 1.26],
+];
+// cursor keys [t, x, y] in shot coords
+const CUR = [
+  [19.6, C.cx - 120, C.cy + 170], [20.25, B.handoff.cx, B.handoff.cy + 4], [20.8, B.handoff.cx, B.handoff.cy + 4], [21.4, B.dispatch.cx + 20, B.dispatch.cy + 4], [22.3, B.dispatch.cx + 40, B.dispatch.cy + 40],
+  [39.4, B.exportBtn.cx - 260, B.exportBtn.cy + 220], [40.1, B.exportBtn.cx, B.exportBtn.cy + 4], [41.0, B.exportBtn.cx + 20, B.exportBtn.cy + 40],
+];
+const CLICKS = [[20.35, B.handoff], [21.5, B.dispatch], [40.2, B.exportBtn]];
+
+function render(t) {
+  $('grid').style.transform = `translate(${-t * 5}px, ${-t * 3}px)`;
+  $('glow').style.transform = `translate(-50%, -50%) scale(${1 + .08 * Math.sin(t * .6)})`;
+  $('glow2').style.transform = `translate(calc(-50% + ${Math.sin(t * .3) * 380}px), calc(-50% + ${Math.cos(t * .25) * 180}px))`;
+
+  // ---- 1 hook 0–6
+  const L1 = win(t, 0, 3.4, .1, .35);
+  $('L1').style.opacity = L1;
+  [...document.querySelectorAll('.hline')].forEach((el, i) => {
+    rise(el, t, .25 + i * .55, .5, 40);
+    el.querySelector('.strike').style.transform = `scaleX(${eo(seg(t, 2.6 + i * .12, 2.95 + i * .12))})`;
+  });
+  $('hlines').style.transform = `scale(${1 - .06 * eo(seg(t, 2.9, 3.4))})`;
+  $('hlines').style.filter = `blur(${seg(t, 3.0, 3.4) * 8}px)`;
+  $('L1b').style.opacity = win(t, 3.3, 6.0, .1, .3);
+  $('L1b').style.transform = `scale(${1 + .04 * seg(t, 3.3, 6)})`;
+  [...document.querySelectorAll('#hook .w')].forEach((w, i) => {
+    const p = back(seg(t, 3.35 + i * .17, 3.75 + i * .17));
+    w.style.opacity = clamp(seg(t, 3.35 + i * .17, 3.6 + i * .17));
+    w.style.transform = `translateY(${(1 - p) * 70}px) scale(${.9 + .1 * clamp(p)})`;
+  });
+
+  // ---- 2 reveal 6–10.4
+  $('L2').style.opacity = win(t, 6.0, 10.4, .15, .35);
+  const lp = back(seg(t, 6.05, 6.55));
+  $('rlogo').style.opacity = clamp(seg(t, 6.05, 6.3));
+  $('rlogo').style.transform = `scale(${.3 + .7 * lp}) rotate(${(1 - lp) * -40}deg)`;
+  ravEls.forEach((el, i) => {
+    const a = 6.35 + i * .14, p = back(seg(t, a, a + .5));
+    const [, , , x, y] = RAV[i];
+    const dx = (x - 912) * (1 - clamp(p)) * .6, dy = (y - 287) * (1 - clamp(p)) * .6;
+    el.style.opacity = clamp(seg(t, a, a + .25));
+    el.style.transform = `translate(${-dx}px, ${-dy}px) scale(${.5 + .5 * p}) translateY(${Math.sin(t * 2 + i) * 5}px)`;
+  });
+  rlines.forEach((l, i) => { l.style.opacity = clamp(seg(t, 6.9 + i * .1, 7.2 + i * .1)) * .8; l.style.strokeDashoffset = -t * 40; });
+  rise($('rt1'), t, 7.3, .5, 40); rise($('rt2'), t, 7.75, .5, 40);
+
+  // ---- browser 10.4–50.9
+  const bin = eo(seg(t, 10.4, 11.3)), bout = eio(seg(t, 50.5, 51.0));
+  $('browser').style.opacity = Math.min(clamp(seg(t, 10.4, 10.8)), 1 - bout);
+  $('browser').style.transform = `perspective(2400px) translateY(${(1 - bin) * 160 + bout * 60}px) rotateX(${(1 - bin) * 22}deg) scale(${(.8 - (1 - bin) * .1) * (1 - bout * .08)})`;
+  let cur = null;
+  for (const [k, a, b, url] of SHOTS_T) {
+    const vis = t >= a && t < b;
+    const o = Math.min(eo(seg(t, a, a + .25)), 1 - seg(t, b - .15, b));
+    SH[k].style.opacity = vis ? (k === 'agents' ? 1 : o) : 0;
+    SH[k].style.display = vis ? 'block' : 'none';
+    if (vis) { cur = k; $('url').innerHTML = `<b>localhost:8080/app</b>${url}`; }
+  }
+  const [fx, fy, z] = track(CAM, t);
+  const tx = clamp(800 - fx * z, 1600 - 1600 * z, 0), ty = clamp(500 - fy * z, 1000 - 1000 * z, 0);
+  $('cam').style.transform = `translate(${tx}px, ${ty}px) scale(${z})`;
+  capEls.forEach((el, i) => { const [a, b] = CAPS[i]; el.style.opacity = win(t, a, b, .35, .3); el.style.transform = `translateY(${(1 - eo(seg(t, a, a + .45))) * 24}px)`; });
+
+  // agents: cards stagger in
+  qa('agents', '.agent-card').forEach((c, i) => { const a = 10.9 + i * .16; c.style.opacity = clamp(seg(t, a, a + .3)); c.style.transform = `translateY(${(1 - back(seg(t, a, a + .5))) * 40}px)`; });
+
+  // dash: typing, strategy, dispatch, live pipeline
+  const n = Math.floor(MISSION.length * seg(t, 16.8, 19.3));
+  typed.innerHTML = MISSION.slice(0, n) + (t < DISPATCH ? `<span class="caret" style="opacity:${t > 19.3 && Math.floor(t * 2.4) % 2 ? 0 : 1}"></span>` : '');
+  if (t >= DISPATCH + .2) typed.innerHTML = '';
+  qa('dash', '.chip[data-tpl]').forEach((c, i) => c.classList.toggle('on', i === 0 && t >= 16.7 && t < DISPATCH + .2));
+  const handoffOn = t >= 20.35;
+  q('dash', '[data-routing="Crew handoff"]').classList.toggle('on', handoffOn);
+  q('dash', '[data-routing="Balanced"]').classList.toggle('on', !handoffOn);
+  q('dash', '#stratHint').textContent = handoffOn ? 'Agents run in order, each building on the previous agents’ output — research → analysis → draft → review.' : 'Agents work in parallel — independent perspectives, fastest wall-clock time.';
+  q('dash', '#dispatchBtn').style.transform = t >= DISPATCH && t < DISPATCH + .15 ? 'scale(.94)' : 'none';
+  const t1 = q('dash', '#t1'); t1.style.opacity = win(t, DISPATCH + .1, 24.5, .25, .4); t1.style.transform = `translateY(${(1 - eo(seg(t, DISPATCH + .1, DISPATCH + .4))) * 20}px)`;
+  const stats = qa('dash', '#dashStats .stat b');
+  if (t >= DISPATCH) {
+    const pp = pipeHTML(t);
+    q('dash', '#dashPipe').innerHTML = pp.html;
+    stats[0].textContent = '5';
+    const inflight = 4 - pp.done;
+    q('dash', '#dashStats .stat:nth-child(4) em').innerHTML = inflight ? `<span style="color:var(--accent-2)">${inflight} step${inflight > 1 ? 's' : ''} in flight</span>` : 'all idle, ready';
+    stats[1].textContent = '100%';
+    liveRow.className = 'm-row';
+    liveRow.innerHTML = `<div><div class="t">${MISSION}</div><div class="d"><span class="status ${pp.cls}">${pp.status}</span><span>Crew handoff</span><span>4 agents</span><span>just now</span></div></div><div class="right"><div class="av-stack">${AG.map(a => `<span class="av sm g${a[2]}">${a[0][0]}</span>`).join('')}</div></div>`;
+    liveRow.style.opacity = clamp(seg(t, DISPATCH, DISPATCH + .3));
+  } else { liveRow.className = ''; liveRow.innerHTML = ''; }
+
+  q('dash', '#view').style.transform = `translateY(${-eio(seg(t, 22.5, 23.6)) * B.dashScroll}px)`;
+  q('models', '#view').style.transform = `translateY(${-eio(seg(t, 47.2, 48.6)) * B.modelScroll}px)`;
+  // mission: scroll through the timeline
+  const ms = eio(seg(t, 31.4, 35.9)) * Math.max(0, B.missionPageH - 1250);
+  q('mission', '#view').style.transform = `translateY(${-ms}px)`;
+  const cs = eio(seg(t, 36.8, 39)) * Math.min(260, Math.max(0, B.comparePageH - 1100));
+  q('compare', '#view').style.transform = `translateY(${-cs}px)`;
+  // final: export toast
+  const t2 = q('final', '#t2'); t2.style.opacity = clamp(seg(t, 40.35, 40.6)); t2.style.transform = `translateY(${(1 - eo(seg(t, 40.35, 40.7))) * 20}px)`;
+  q('final', '[data-act="md"]').style.transform = t >= 40.2 && t < 40.35 ? 'scale(.94)' : 'none';
+
+  // palette: keycaps, open, type, reveal
+  $('keys').style.opacity = win(t, 42.15, 43.0, .15, .25);
+  const kp = t >= 42.45 && t < 42.65;
+  [...document.querySelectorAll('.key')].forEach(k => { k.style.transform = kp ? 'translateY(6px)' : 'none'; k.style.borderBottomWidth = kp ? '2px' : '7px'; });
+  $('keys').style.transform = `translateX(-50%) scale(${.8 + .2 * back(seg(t, 42.15, 42.45))})`;
+  const po = eo(seg(t, 42.55, 42.85));
+  const ov = q('palette', '#paletteOverlay');
+  ov.style.opacity = po; ov.querySelector('.palette').style.transform = `translateY(${(1 - po) * 20}px) scale(${.97 + .03 * po})`;
+  palInput.value = 'launch'.slice(0, Math.floor(6 * seg(t, 43.0, 43.7)));
+  palItems.forEach((el, i) => { const a = 43.85 + i * .07; el.style.opacity = clamp(seg(t, a, a + .2)); el.style.transform = `translateY(${(1 - eo(seg(t, a, a + .3))) * 8}px)`; });
+
+  // cursor + clicks (only while its shot is visible)
+  const curOn = (t >= 19.6 && t < 22.4) || (t >= 39.4 && t < 41.1);
+  const [cx, cy] = track(CUR, t);
+  const cvis = curOn ? Math.min(clamp(seg(t, t < 30 ? 19.6 : 39.4, (t < 30 ? 19.6 : 39.4) + .2)), 1 - seg(t, t < 30 ? 22.1 : 40.8, t < 30 ? 22.4 : 41.1)) : 0;
+  const pressing = CLICKS.some(([ct]) => t >= ct && t < ct + .15);
+  $('cursor').style.opacity = cvis;
+  $('cursor').style.transform = `translate(${cx - 4}px, ${cy - 3}px) scale(${pressing ? .85 : 1})`;
+  let rip = 0, rb = null;
+  for (const [ct, b] of CLICKS) { const p = seg(t, ct, ct + .45); if (p > 0 && p < 1) { rip = p; rb = b; } }
+  $('ripple').style.opacity = rb ? (1 - rip) : 0;
+  if (rb) $('ripple').style.transform = `translate(${rb.cx - 32}px, ${rb.cy - 32}px) scale(${.3 + rip * 1.5})`;
+
+  // ---- montage 50.9–54.6
+  $('L10').style.opacity = win(t, 50.9, 54.6, .3, .3);
+  rise($('mtitle'), t, 51.0, .5, 30);
+  [...document.querySelectorAll('.tile')].forEach((el, i) => {
+    const a = 51.45 + i * .536, p = back(seg(t, a, a + .45));
+    el.style.opacity = clamp(seg(t, a, a + .2));
+    el.style.transform = `translateY(${(1 - p) * 60}px) scale(${.9 + .1 * clamp(p)})`;
+  });
+
+  // ---- outro 54.6–60
+  $('L11').style.opacity = win(t, 54.6, 61, .3, .1);
+  const op = back(seg(t, 54.65, 55.15));
+  $('ologo').style.opacity = clamp(seg(t, 54.65, 54.85)); $('ologo').style.transform = `scale(${.4 + .6 * op}) rotate(${(1 - op) * -30}deg)`;
+  rise($('oname'), t, 54.9, .5, 36); rise($('otag'), t, 55.25, .5, 24); rise($('ocmd'), t, 55.6, .5, 20); rise($('ogh'), t, 55.9, .5, 14); rise($('oby'), t, 56.1, .5, 12);
+  $('fade').style.opacity = seg(t, 59.3, 60);
+  for (const el of document.querySelectorAll('.layer, #browser, .cap, #keys')) el.style.visibility = +el.style.opacity > 0 ? 'visible' : 'hidden';
+}
+window.render = render;
+render(0);
+};
+</script>
+</body>
+</html>

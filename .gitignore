@@ -30,3 +30,12 @@ brag-output/work/stills/
 brag-output/work/check/
 brag-output/work/*.wav
 brag-output/work/video_noaudio.mp4
+brag-output/**/work/stills/
+brag-output/**/work/check/
+brag-output/**/work/*.wav
+brag-output/**/work/*.db
+brag-output/**/work/seg_*.mp4
+brag-output/**/work/video_noaudio.mp4
+brag-output/**/work/log_*.txt
+brag-output/**/work/list.txt
+brag-output/**/work/sheet.png

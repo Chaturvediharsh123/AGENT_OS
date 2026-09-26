@@ -13,9 +13,9 @@ AgentOS is a visual workspace for turning one outcome into a coordinated run of 
 
 ### Watch the intro
 
-[![AgentOS intro video](brag-output/brag.jpg)](brag-output/brag.mp4)
+[![AgentOS intro video](brag-output/v2/brag.jpg)](brag-output/v2/brag.mp4)
 
-*21-second intro: [brag-output/brag.mp4](brag-output/brag.mp4)*
+*60-second walkthrough: [brag-output/v2/brag.mp4](brag-output/v2/brag.mp4) · 21-second teaser: [brag-output/brag.mp4](brag-output/brag.mp4)*
 
 ### Explore the workspace
 
