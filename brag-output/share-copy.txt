@@ -1,0 +1,4 @@
+Stop asking one AI. AgentOS turns one outcome into a crew of agents (researcher, analyst, writer, reviewer) that hand work to each other while you watch the pipeline live.
+
+Local-first on Ollama, zero pip dependencies, one command: python server.py
+github.com/Chaturvediharsh123/AGENT_OS

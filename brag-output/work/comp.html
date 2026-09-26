@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../static/agentos.css">
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+  .grid { position: absolute; inset: -60px; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 20%, transparent 75%); }
+  .glow { position: absolute; width: 1400px; height: 900px; left: 50%; top: 50%; transform: translate(-50%, -50%); background: radial-gradient(closest-side, rgba(139,108,255,.32), rgba(34,211,238,.10), transparent); }
+  .scene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; opacity: 0; will-change: transform, opacity; }
+  .big { font: 800 150px/1.02 Inter, sans-serif; letter-spacing: -.05em; text-align: center; color: var(--text); }
+  .big .w { display: inline-block; margin: 0 .12em; }
+  .bubble { position: absolute; left: 50%; top: 50%; padding: 22px 30px; border-radius: 22px 22px 22px 6px; background: var(--surface-2); border: 1px solid var(--border-2); color: var(--muted); font: 500 30px Inter; white-space: nowrap; }
+  .reveal-logo { width: 150px; height: 150px; border-radius: 42px; background: var(--grad); display: grid; place-items: center; box-shadow: 0 30px 90px -20px rgba(99,102,241,.9); margin-bottom: 54px; }
+  .reveal-logo svg { width: 84px; height: 84px; }
+  .h1 { font: 800 120px/1.04 Inter; letter-spacing: -.05em; text-align: center; }
+  .line { display: block; }
+  .caption { position: absolute; top: 92px; left: 0; right: 0; text-align: center; font: 800 64px Inter; letter-spacing: -.035em; color: var(--text); }
+  .caption small { display: block; font: 600 22px 'JetBrains Mono'; letter-spacing: .18em; color: var(--accent); margin-bottom: 14px; text-transform: uppercase; }
+  .ui { position: absolute; left: 50%; top: 56%; transform-origin: center; }
+  .composer .typed { min-height: 128px; padding: 20px 20px 10px; font-size: 16px; line-height: 1.6; color: var(--text); }
+  .composer .typed .caret { display: inline-block; width: 2px; height: 1.1em; background: var(--accent); vertical-align: -3px; margin-left: 1px; }
+  .cursor { position: absolute; width: 26px; height: 26px; z-index: 5; filter: drop-shadow(0 3px 6px rgba(0,0,0,.6)); }
+  .ripple { position: absolute; width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent-2); z-index: 4; }
+  .toast { position: absolute; }
+  .p-node .top b { font-size: 15px; }
+  .final .md { font-size: 15px; }
+  .outro-name { font: 900 150px Inter; letter-spacing: -.055em; margin-top: 10px; }
+  .outro-tag { font: 600 34px Inter; color: var(--text-2); margin-top: 18px; letter-spacing: -.01em; }
+  .outro-cmd { margin-top: 48px; padding: 18px 30px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border-2); font: 600 30px 'JetBrains Mono'; color: var(--text); }
+  .outro-cmd .p { color: var(--accent); } .outro-cmd .a { color: var(--muted); } .outro-cmd .u { color: var(--accent-2); }
+  .outro-gh { margin-top: 26px; font: 500 24px 'JetBrains Mono'; color: var(--muted); }
+  #fade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="grid" id="grid"></div>
+  <div class="glow" id="glow"></div>
+
+  <!-- 1 HOOK -->
+  <section class="scene" id="s1">
+    <div class="bubble" id="bubble">Here's one answer. Good luck.</div>
+    <div class="big" id="hook"><span class="w">Stop</span><span class="w">asking</span><br><span class="w grad-text">one</span><span class="w">AI.</span></div>
+  </section>
+
+  <!-- 2 REVEAL -->
+  <section class="scene" id="s2">
+    <div class="reveal-logo" id="rlogo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><circle cx="12" cy="12" r="2.2" fill="#fff" stroke="none"/></svg></div>
+    <div class="h1"><span class="line" id="r1">One outcome.</span><span class="line grad-text" id="r2">A crew of AI agents.</span></div>
+  </section>
+
+  <!-- 3 COMPOSER -->
+  <section class="scene" id="s3">
+    <div class="caption" id="c3"><small>Mission Control</small>Describe the outcome.</div>
+    <div class="ui" id="ui3" style="width:1000px">
+      <section class="card composer focus" id="composer">
+        <div class="typed" id="typed"></div>
+        <div class="templates">
+          <button class="chip on">🚀 Launch brief</button><button class="chip">🔍 Market scan</button><button class="chip">🧑‍💻 Code review</button><button class="chip">🎤 Pitch script</button><button class="chip">📚 Study plan</button>
+        </div>
+        <div class="composer-foot">
+          <span class="lbl">CREW</span>
+          <div class="crew-picker">
+            <button class="chip crew"><span class="av g1">S</span>Scout</button>
+            <button class="chip crew"><span class="av g2">M</span>Miller</button>
+            <button class="chip crew"><span class="av g3">J</span>Juniper</button>
+            <button class="chip crew"><span class="av g4">C</span>Clover</button>
+          </div>
+          <span class="grow"></span>
+        </div>
+        <div class="composer-foot">
+          <span class="lbl">STRATEGY</span>
+          <div class="seg"><button>Parallel</button><button class="on">Crew handoff</button><button>Local only</button></div>
+          <span class="grow"></span>
+          <button class="btn primary" id="dispatch">Dispatch mission <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </section>
+      <div class="ripple" id="ripple"></div>
+      <svg class="cursor" id="cursor" viewBox="0 0 24 24"><path d="M4 2l16 9-7 2-3 7z" fill="#fff" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <div class="toast ok" id="toast3" style="right:0;bottom:-78px"><span class="dot"></span><span>Mission dispatched to 4 agents</span></div>
+    </div>
+  </section>
+
+  <!-- 4 PIPELINE -->
+  <section class="scene" id="s4">
+    <div class="caption" id="c4"><small>Crew handoff</small>Agents hand off work, live.</div>
+    <div class="ui" id="ui4" style="width:1060px">
+      <section class="card panel">
+        <div class="panel-head"><h2>Live pipeline</h2><span class="sub" id="pipeStatus"></span></div>
+        <div style="font-weight:600;margin-bottom:12px">Research the AI study-planner market and draft a launch brief</div>
+        <div style="display:flex;gap:8px;margin-bottom:16px"><span class="pill accent">CREW HANDOFF</span><span class="pill">4 agents</span><span class="pill" id="elapsed">0.0s</span></div>
+        <div class="pipeline" id="pipe"></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- 5 FINAL -->
+  <section class="scene" id="s5">
+    <div class="caption" id="c5"><small>Final answer</small>Reviewed. Exported. Yours.</div>
+    <div class="ui" id="ui5" style="width:900px">
+      <section class="card final">
+        <div class="eyebrow" style="margin-bottom:12px">Final answer · Clover (Reviewer)</div>
+        <div class="md">
+          <h2>Launch brief: AI study planner</h2>
+          <p><strong>Recommendation:</strong> ship a focused MVP for exam season, gated by a two-week campus pilot.</p>
+          <ul>
+            <li><strong>Evidence:</strong> Scout's research, checked by Miller's analysis</li>
+            <li><strong>Gap fixed:</strong> cost estimate added before sharing</li>
+            <li><strong>Verdict:</strong> ready to send</li>
+          </ul>
+        </div>
+      </section>
+      <div class="toast ok" id="toast5" style="right:-20px;bottom:-80px"><span class="dot"></span><span>Exported <b class="mono">agentos-mission.md</b></span></div>
+    </div>
+  </section>
+
+  <!-- 6 OUTRO -->
+  <section class="scene" id="s6">
+    <div class="reveal-logo" id="ologo" style="margin-bottom:0"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><circle cx="12" cy="12" r="2.2" fill="#fff" stroke="none"/></svg></div>
+    <div class="outro-name" id="oname">Agent<span class="grad-text">OS</span></div>
+    <div class="outro-tag" id="otag">Local-first · Zero dependencies · Runs on Ollama</div>
+    <div class="outro-cmd" id="ocmd"><span class="p">$</span> python server.py <span class="a">→</span> <span class="u">localhost:8080</span></div>
+    <div class="outro-gh" id="ogh">github.com/Chaturvediharsh123/AGENT_OS</div>
+  </section>
+
+  <div id="fade"></div>
+</div>
+
+<script>
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);            // ease out cubic
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const $ = id => document.getElementById(id);
+const set = (el, o, tf) => { el.style.opacity = o; if (tf != null) el.style.transform = tf; };
+// Scene window: fade in over [a, a+i], out over [b-o, b].
+const win = (t, a, b, i = .35, o = .3) => Math.min(eo(seg(t, a, a + i)), 1 - seg(t, b - o, b));
+
+const MISSION = 'Research the AI study-planner market, analyse the top 3 competitors, and draft a one-page launch brief.';
+const AGENTS = [['Scout', 'Researcher', 'g1'], ['Miller', 'Analyst', 'g2'], ['Juniper', 'Writer', 'g3'], ['Clover', 'Reviewer', 'g4']];
+const P0 = 11.75, STEP = .78;
+
+function render(t) {
+  // background drift
+  $('grid').style.transform = `translate(${-t * 6}px, ${-t * 4}px)`;
+  $('glow').style.transform = `translate(-50%, -50%) scale(${1 + .08 * Math.sin(t * .7)})`;
+
+  // ---- 1 HOOK 0–2.8
+  const s1 = win(t, 0, 2.8, .15, .3);
+  set($('s1'), s1, `scale(${1 + .03 * seg(t, 0, 2.8)})`);
+  [...$('hook').querySelectorAll('.w')].forEach((w, i) => {
+    const p = back(seg(t, .15 + i * .16, .5 + i * .16));
+    w.style.opacity = clamp(seg(t, .15 + i * .16, .4 + i * .16));
+    w.style.transform = `translateY(${(1 - p) * 60}px)`;
+  });
+  const bp = seg(t, 0, 2.2);
+  set($('bubble'), .85 * (1 - bp), `translate(-50%, calc(-50% + ${-260 - bp * 60}px)) scale(${.9 + .1 * eo(seg(t, 0, .3))})`);
+
+  // ---- 2 REVEAL 2.8–6.0
+  set($('s2'), win(t, 2.8, 6.0, .2, .3));
+  const lp = back(seg(t, 2.85, 3.35));
+  set($('rlogo'), clamp(seg(t, 2.85, 3.1)), `scale(${.4 + .6 * lp}) rotate(${(1 - lp) * -30}deg)`);
+  set($('r1'), clamp(seg(t, 3.15, 3.45)), `translateY(${(1 - eo(seg(t, 3.15, 3.6))) * 40}px)`);
+  set($('r2'), clamp(seg(t, 3.5, 3.8)), `translateY(${(1 - eo(seg(t, 3.5, 3.95))) * 40}px)`);
+
+  // ---- 3 COMPOSER 6.0–11.2
+  const s3 = win(t, 6.0, 11.2, .35, .3);
+  set($('s3'), s3);
+  set($('c3'), clamp(seg(t, 6.15, 6.45)), `translateY(${(1 - eo(seg(t, 6.15, 6.6))) * 24}px)`);
+  set($('ui3'), 1, `translate(-50%, -50%) scale(${1.38 + .04 * seg(t, 6, 11.2)}) translateY(${(1 - eo(seg(t, 6, 6.5))) * 60}px)`);
+  const n = Math.floor(MISSION.length * seg(t, 6.55, 9.2));
+  const blink = t > 9.2 && Math.floor(t * 2.4) % 2 ? 0 : 1;
+  $('typed').innerHTML = MISSION.slice(0, n).replace(/&/g, '&amp;') + `<span class="caret" style="opacity:${blink}"></span>`;
+  [...document.querySelectorAll('.chip.crew')].forEach((c, i) => c.classList.toggle('on', t >= 9.35 + i * .14));
+  // cursor path → dispatch button (~ local coords)
+  const ur = $('ui3').getBoundingClientRect(), dr = $('dispatch').getBoundingClientRect(), k = ur.width / 1000;
+  const tx = (dr.left - ur.left + dr.width * .62) / k, ty = (dr.top - ur.top + dr.height * .55) / k;
+  const cp = eio(seg(t, 9.8, 10.45));
+  const cx = 520 + (tx - 520) * cp, cy = (ty + 150) + (ty - (ty + 150)) * cp;
+  const press = t >= 10.55 && t < 10.7;
+  set($('cursor'), clamp(seg(t, 9.7, 9.9)) * (1 - seg(t, 10.95, 11.1)), `translate(${cx}px, ${cy}px) scale(${press ? .85 : 1})`);
+  $('cursor').style.left = '0px'; $('cursor').style.top = '0px';
+  $('dispatch').style.transform = press ? 'scale(.95)' : 'none';
+  const rp = seg(t, 10.55, 11.0);
+  set($('ripple'), rp > 0 && rp < 1 ? (1 - rp) : 0, `translate(${tx - 30}px, ${ty - 30}px) scale(${.3 + rp * 1.4})`);
+  $('ripple').style.left = '0px'; $('ripple').style.top = '0px';
+  set($('toast3'), clamp(seg(t, 10.65, 10.85)), `translateY(${(1 - eo(seg(t, 10.65, 10.9))) * 20}px)`);
+
+  // ---- 4 PIPELINE 11.2–15.4
+  set($('s4'), win(t, 11.2, 15.4, .3, .3));
+  set($('c4'), clamp(seg(t, 11.3, 11.6)), `translateY(${(1 - eo(seg(t, 11.3, 11.75))) * 24}px)`);
+  set($('ui4'), 1, `translate(-50%, -50%) scale(${1.42 + .03 * seg(t, 11.2, 15.4)}) translateY(${(1 - eo(seg(t, 11.2, 11.65))) * 60}px)`);
+  let html = '';
+  let done = 0;
+  AGENTS.forEach(([name, role, g], i) => {
+    const s = P0 + i * STEP, e = s + STEP;
+    const st = t >= e ? 'completed' : t >= s ? 'running' : 'queued';
+    if (st === 'completed') done++;
+    const dur = st === 'queued' ? '' : ((Math.min(t, e) - s) * 2.1).toFixed(1) + 's';
+    const badge = st === 'completed' ? '✓ Completed' : st === 'running' ? '<span class="spinner" style="border-width:2px"></span> Running' : '◌ Queued';
+    const linkOn = i && t >= s;
+    if (i) html += `<div class="p-link ${linkOn ? 'on' : ''}"><svg viewBox="0 0 34 20"><path d="M2 10h28M24 4l6 6-6 6" style="stroke-dashoffset:${-t * 24}"/></svg></div>`;
+    const prog = st === 'running' ? `<i style="width:100%;background-position:${-t * 200}% 0"></i>` : '<i></i>';
+    html += `<div class="p-node ${st}"><div class="top"><span class="av sm ${g}">${name[0]}</span><div><b>${name}</b><small>${role}</small></div></div>
+      <div class="bar">${prog}</div><div class="meta"><span class="status ${st}">${badge}</span><span>${dur}</span></div></div>`;
+  });
+  $('pipe').innerHTML = html;
+  document.querySelectorAll('#pipe .spinner').forEach(sp => sp.style.transform = `rotate(${t * 400}deg)`);
+  $('pipeStatus').textContent = done === 4 ? 'Mission complete' : `${done}/4 steps done`;
+  $('elapsed').textContent = '⏱ ' + (Math.max(0, Math.min(t, P0 + 4 * STEP) - P0) * 2.1).toFixed(1) + 's';
+
+  // ---- 5 FINAL 15.4–18.2
+  set($('s5'), win(t, 15.4, 18.2, .3, .3));
+  set($('c5'), clamp(seg(t, 15.5, 15.8)), `translateY(${(1 - eo(seg(t, 15.5, 15.95))) * 24}px)`);
+  set($('ui5'), 1, `translate(-50%, -50%) scale(${1.4 + .03 * seg(t, 15.4, 18.2)}) translateY(${(1 - eo(seg(t, 15.4, 15.9))) * 60}px)`);
+  set($('toast5'), clamp(seg(t, 16.35, 16.55)), `translateY(${(1 - eo(seg(t, 16.35, 16.6))) * 20}px)`);
+
+  // ---- 6 OUTRO 18.2–21
+  set($('s6'), win(t, 18.2, 21.5, .3, .1));
+  const op = back(seg(t, 18.25, 18.75));
+  set($('ologo'), clamp(seg(t, 18.25, 18.45)), `scale(${.5 + .5 * op})`);
+  set($('oname'), clamp(seg(t, 18.45, 18.75)), `translateY(${(1 - eo(seg(t, 18.45, 18.9))) * 30}px)`);
+  set($('otag'), clamp(seg(t, 18.7, 19.0)), `translateY(${(1 - eo(seg(t, 18.7, 19.1))) * 20}px)`);
+  set($('ocmd'), clamp(seg(t, 18.95, 19.25)), `translateY(${(1 - eo(seg(t, 18.95, 19.35))) * 20}px)`);
+  set($('ogh'), clamp(seg(t, 19.15, 19.45)));
+  $('fade').style.opacity = seg(t, 20.55, 21.0);
+}
+window.render = render;
+render(0);
+</script>
+</body>
+</html>

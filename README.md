@@ -11,6 +11,12 @@
 
 AgentOS is a visual workspace for turning one outcome into a coordinated run of AI agents. Choose one agent, a subset, or the full crew; route work to Ollama or a cloud model; watch the run unfold; then inspect the finished answer as a searchable, exportable result.
 
+### Watch the intro
+
+[![AgentOS intro video](brag-output/brag.jpg)](brag-output/brag.mp4)
+
+*21-second intro: [brag-output/brag.mp4](brag-output/brag.mp4)*
+
 ### Explore the workspace
 
 | | Link |

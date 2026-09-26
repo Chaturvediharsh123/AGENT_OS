@@ -24,3 +24,9 @@ build/
 Thumbs.db
 .idea/
 .vscode/
+
+# /brag intermediates (keep the final video, poster and sources)
+brag-output/work/stills/
+brag-output/work/check/
+brag-output/work/*.wav
+brag-output/work/video_noaudio.mp4
